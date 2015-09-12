@@ -1,0 +1,48 @@
+{
+  "uuid": "ed70b15c-3c48-4828-8e8c-e39a28ef1337",
+  "shortName": "pr0bble",
+  "longName": "pr0bble",
+  "companyName": "W0rscht - pr0gramm.com",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "KEY_USERNAME": 0,
+    "KEY_BENIS": 1
+  },
+  "capabilities": [ "configurable" ],
+  "resources": {
+    "media": [
+      {
+        "type": "font",
+        "name": "FONT_SANS_SERIF_36",
+        "file": "fonts/sans_serif.ttf",
+        "compatibility": "2.7"
+      },
+      {
+        "type": "font",
+        "name": "FONT_SANS_SERIF_20",
+        "file": "fonts/sans_serif.ttf",
+        "compatibility": "2.7"
+      },
+      {
+        "type": "png",
+        "name": "IMAGE_BACKGROUND",
+        "file": "images/background.png"
+      },
+      {
+          "file": "images/menuicon.png",
+          "menuIcon": true,
+          "name": "IMAGE_MENU_ICON",
+          "type": "png"
+      }
+    ]
+  },
+  "targetPlatforms": [
+    "aplite",
+    "basalt"
+  ],
+  "sdkVersion": "3"
+}
