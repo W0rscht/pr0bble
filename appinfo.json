@@ -25,7 +25,19 @@
       },
       {
         "type": "font",
+        "name": "FONT_SANS_SERIF_24",
+        "file": "fonts/sans_serif.ttf",
+        "compatibility": "2.7"
+      },
+      {
+        "type": "font",
         "name": "FONT_SANS_SERIF_20",
+        "file": "fonts/sans_serif.ttf",
+        "compatibility": "2.7"
+      },
+      {
+        "type": "font",
+        "name": "FONT_SANS_SERIF_16",
         "file": "fonts/sans_serif.ttf",
         "compatibility": "2.7"
       },

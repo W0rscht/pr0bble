@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define KEY_USERNAME 0
 #define KEY_BENIS 1
@@ -215,8 +216,31 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     t = dict_read_next(iterator);
   }
 
-  // Assemble full string and display
+  // get the size of the username to
+  // determing the matching font and layer size
+  int username_length = strlen(username_buffer);
+  int start_offset    = 60;
+  APP_LOG(APP_LOG_LEVEL_INFO, "Username is %d chars big!", (int)username_length);
+
+  // use matching text field for username size
+  if (username_length > 16) {
+    s_username_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SANS_SERIF_16));
+    start_offset    = 80;
+  }
+  else if (username_length > 8) {
+    s_username_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SANS_SERIF_24));
+    start_offset    = 70;
+  }
+  else {
+    s_username_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SANS_SERIF_36));
+    start_offset    = 60;
+  }
+
+  // set matching font size and display username
+  text_layer_set_font(s_username_layer, s_username_font);
+  layer_set_frame(text_layer_get_layer(s_username_layer), GRect(0, start_offset, 144, 80));
   text_layer_set_text(s_username_layer, username_buffer);
+  // display benis
   text_layer_set_text(s_benis_layer, benis_buffer);
 }
 
