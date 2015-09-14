@@ -10,7 +10,9 @@
   },
   "appKeys": {
     "KEY_USERNAME": 0,
-    "KEY_BENIS": 1
+    "KEY_BENIS": 1,
+    "KEY_DICKBUTT": 2,
+    "KEY_DICKBUTT_INTENSITY": 3
   },
   "capabilities": [ "configurable" ],
   "resources": {
@@ -31,6 +33,11 @@
         "type": "png",
         "name": "IMAGE_BACKGROUND",
         "file": "images/background.png"
+      },
+      {
+        "type": "png",
+        "name": "IMAGE_DICKBUTT",
+        "file": "images/dickbutt.png"
       },
       {
           "file": "images/menuicon.png",

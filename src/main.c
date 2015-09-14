@@ -1,9 +1,14 @@
 #include <pebble.h>
+#include <stdlib.h>
 
 #define KEY_USERNAME 0
 #define KEY_BENIS 1
+#define KEY_DICKBUTT 2
+#define KEY_DICKBUTT_INTENSITY 3
 
 static Window *s_main_window;
+static Window *s_dickbutt_window;
+
 static TextLayer *s_time_layer;
 static TextLayer *s_username_layer;
 static TextLayer *s_benis_layer;
@@ -14,6 +19,10 @@ static GFont s_benis_font;
 
 static BitmapLayer *s_background_layer;
 static GBitmap *s_background_bitmap;
+
+static bool dickbutt_visible                = false;
+static bool config_dickbutt                 = false;
+static signed int config_dickbutt_intensity = 5;
 
 static void update_time() {
   // Get a tm structure
@@ -36,10 +45,19 @@ static void update_time() {
   text_layer_set_text(s_time_layer, buffer);
 }
 
+static void dickbutt_window_load(Window *window) {
+
+  //Create GBitmap, then set to created BitmapLayer
+  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DICKBUTT);
+  s_background_layer  = bitmap_layer_create(GRect(0, 0, 144, 168));
+  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_background_layer));
+}
+
 static void main_window_load(Window *window) {
   //Create GBitmap, then set to created BitmapLayer
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BACKGROUND);
-  s_background_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+  s_background_layer  = bitmap_layer_create(GRect(0, 0, 144, 168));
   bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_background_layer));
 
@@ -124,6 +142,46 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   }
 }
 
+static void dickbutt_handler(struct tm *tick_time, TimeUnits units_changed) {
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "dickbutt_handler called.");
+
+  if ( !config_dickbutt ) {
+    return;
+  }
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "dickbutt_handler active.");
+
+  // remove dickbutt if visible and skip
+  if ( dickbutt_visible ) {
+
+    APP_LOG(APP_LOG_LEVEL_INFO, "dickbutt visible, removing.");
+
+    window_stack_remove(s_dickbutt_window, true);
+    dickbutt_visible = false;
+    return;
+  }
+
+  // overwrite intensity 0 with 1 since
+  // 0 generates huge numbers the user
+  // won't expect
+  if ( config_dickbutt_intensity == 0 ) {
+    config_dickbutt_intensity = 1;
+  }
+
+  int randomness = rand() % config_dickbutt_intensity;
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "dickbutt randomness = %d,.", randomness);
+
+  if (randomness == 0) {
+
+    APP_LOG(APP_LOG_LEVEL_INFO, "dickbutt show your beautiful face!");
+
+    window_stack_push(s_dickbutt_window, true);
+    dickbutt_visible = true;
+  }
+}
+
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
   static char benis_buffer[32];
@@ -141,6 +199,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       break;
     case KEY_BENIS:
       snprintf(benis_buffer, sizeof(benis_buffer), "%d", (int)t->value->int32);
+      break;
+    case KEY_DICKBUTT:
+      config_dickbutt = (bool)t->value->int32;
+      break;
+    case KEY_DICKBUTT_INTENSITY:
+      config_dickbutt_intensity = (int)t->value->int32;
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -174,7 +238,7 @@ static void init() {
 
   // Set handlers to manage the elements inside the Window
   window_set_window_handlers(s_main_window, (WindowHandlers) {
-    .load = main_window_load,
+    .load   = main_window_load,
     .unload = main_window_unload
   });
 
@@ -183,6 +247,17 @@ static void init() {
 
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
+  // Create main Window element and assign to pointer
+  s_dickbutt_window = window_create();
+
+  // Set handlers to manage the elements inside the Window
+  window_set_window_handlers(s_dickbutt_window, (WindowHandlers) {
+    .load = dickbutt_window_load,
+  });
+
+  // Register dickbutt handler with TickTimerService
+  tick_timer_service_subscribe(SECOND_UNIT, dickbutt_handler);
 
   // Register callbacks
   app_message_register_inbox_received(inbox_received_callback);
@@ -197,6 +272,7 @@ static void init() {
 static void deinit() {
   // Destroy Window
   window_destroy(s_main_window);
+  window_destroy(s_dickbutt_window);
 }
 
 int main(void) {

@@ -1,7 +1,11 @@
 var initialized = false;
 var options     = {
-  "username": "cha0s",
+  "username":                  "cha0s",
+  "config_dickbutt":           false,
+  "config_dickbutt_intensity": 5
 };
+
+console.log("options.config_dickbutt is ", options.config_dickbutt);
 
 var xhrRequest = function (url, type, callback) {
 
@@ -60,10 +64,16 @@ function p0grammGet() {
       var benis = json.user.score;
       console.log("Benis is " + benis);
 
+      console.log("options.username is ", options.username);
+      console.log("options.config_dickbutt is ", options.config_dickbutt);
+      console.log("options.config_dickbutt_intensity is ", parseInt(options.config_dickbutt_intensity, 10));
+
       // Assemble dictionary using our keys
       var dictionary = {
-        "KEY_USERNAME": username,
-        "KEY_BENIS": benis
+        "KEY_USERNAME":           username,
+        "KEY_BENIS":              benis,
+        "KEY_DICKBUTT":           options.config_dickbutt,
+        "KEY_DICKBUTT_INTENSITY": parseInt(options.config_dickbutt_intensity, 10)
       };
 
       // Send to Pebble
@@ -119,6 +129,9 @@ Pebble.addEventListener("webviewclosed", function(e) {
   var response = decodeURIComponent(e.response);
   try {
     options = JSON.parse(response);
+
+    console.log("Response config json: " + response);
+    console.log("Response config options: " + options);
 
     window.localStorage.setItem('pr0gramm-config', response);
 
